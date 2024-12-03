@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
+const db = require('./DB/db')
 
 const routes = require('./ROUTES/routes'); // importa as rotas
 
