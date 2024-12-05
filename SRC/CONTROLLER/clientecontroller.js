@@ -4,10 +4,10 @@ const bcrypt = require('bcrypt'); //para encriptação de senhas
 
 const clienteSchema = joi.object({
     cpf: joi.string().length(11).required(), // CPF deve ser uma string de exatamente 11 caracteres
-    nome: joi.string().required().max(50), //nme deve ser uma string e é obrigatório
+    nome: joi.string().required().max(50), //nome deve ser uma string e é obrigatório
     endereco: joi.string().required().max(80), //endereço deve ser uma string e é obrigatório
     bairro: joi.string().required().max(30), //bairro é uma string e é obrigatório
-    cidade: joi.string().required().max(30),
+    cidade: joi.string().required().max(30), //cidade é uma string e é obrigatório 
     cep: joi.string().required(), //CEP deve ser uma string e é obrigatório
     telefone: joi.string().required(), //telefone deve ser uma string e é obrigatório
     email: joi.string().email().required().max(50), //email deve ser válido e é obrigatório
@@ -29,7 +29,7 @@ exports.listarClientes = async (req, res) => {
 exports.listarClienteCPF = async (req, res) => {
     const { cpf } = req.params;
     try {
-        const [result] = await db.query('SELECT * FROM cliente WHERE cpf = ?'[cpf]);
+        const [result] = await db.query('SELECT * FROM cliente WHERE cpf = ?', [cpf]);
         if (result.length === 0) {
             return res.status(404).json({ error: 'Cliente não encontrado' });
         }
@@ -40,7 +40,7 @@ exports.listarClienteCPF = async (req, res) => {
     }
 };
 
-//aadicionar um novo cliente
+//adicionar um novo cliente
 exports.adicionarCliente = async (req, res) => {
     const { cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha } = req.body;
 
@@ -48,17 +48,59 @@ exports.adicionarCliente = async (req, res) => {
     const { error } = clienteSchema.validate({ cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha });
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
-    } 
+    }
     try {
         //Criptografando a senha
         const hash = await bcrypt.hash(senha, 10)
-        const novoCliente = {cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha: hash};
+        const novoCliente = { cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha: hash };
         await db.query('INSERT INTO cliente SET ?', novoCliente);
 
-        res.json({message: 'Cliente adicionado com sucesso'});
+        res.json({ message: 'Cliente adicionado com sucesso' });
     } catch (err) {
-      console.error('Erro ao adicionar cliente:', err);
-      res.status(500).json({error: 'Erro ao adicionar cliente'})  
+        console.error('Erro ao adicionar cliente:', err);
+        res.status(500).json({ error: 'Erro ao adicionar cliente' })
     }
-}
+};
 
+// Atualizar cliente
+exports.atualizarCliente = async (req, res) => {
+    const { cpf } = req.params;
+    const { nome, endereço, bairro, cidade, cep, telefone, email, senha } = req.body;
+    //validação de dados
+    const { error } = clienteSchema.validate({ cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha });
+    if (error) {
+        return res.status(400).json({ error: error.details[0].message });
+    }
+    try {
+    // verifica se o cliente existe antes de atualizar 
+    const [result] = await db.query('SELECT * FROM cliente WHERE cpf = ?', [cpf]);
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Cliente não encontrado'});
+        }
+    // Criptografando a senha 
+    const hash = await bcrypt.hash(senha, 10);    
+    const clienteAtualizado = { nome, endereço, bairro, cidade, cep, telefone, email, senha: hash };
+    await db.query('UPDATE cliente SET ? WHERE cpf = ? ', [clienteAtualizado, cpf]);
+    res.json({message: 'Cliente atualizado com sucesso'});
+    } catch (err) {
+    console.error('Erro ao atualizar cliente:', err); 
+    res.status(500).json({error: 'Erro ao atualizar'});
+    }
+};
+
+//Deletar cliente
+exports.deletarCliente = async (req, res) => {
+    const { cpf } = req.params;
+    try {
+    //verifica se o cliente existe antes de deletar
+    const [result] = await db.query('SELECT * FROM cliente WHERE cpf = ?', [cpf]);
+    if (result.length === 0) {
+        return res.status(400).json({ error: 'Cliente não encontrado'});
+    }
+    await db.query('DELETE FROM cliente WHERE cpf = ?', [cpf]);
+    res.json({message: 'Cliente deletado com sucesso'});
+    } catch (err) {
+        console.error('Erro ao deletar cliente:', err);
+        res.status(500).json({error: 'Erro ao deletar cliente'});
+    }
+};

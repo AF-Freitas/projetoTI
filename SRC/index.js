@@ -5,9 +5,10 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
 const path = require('path');
-const db = require('./DB/db')
+const db = require('./DB/db');
 
 const routes = require('./ROUTES/routes'); // importa as rotas
+const clienteRoutes = require('./ROUTES/clienteroutes') // importa as rotas do cliente controller
 
 const { METHODS } = require('http');
 
@@ -17,7 +18,7 @@ const corsOptions = {
     credentials: true, //permite o envio de cookies
 
 }
-const app = express() //o app irá receber o express e todas as suas dependências
+const app = express(); //o app irá receber o express e todas as suas dependências
 
 //Middlewares de segurança e utilidades 
 app.use(helmet()); //protege a aplicação com headers de segurança 
@@ -34,8 +35,10 @@ app.get('/', (req,res) => {
 });
 
 //configuração de rotas
-// após declarar nossas rotas, aqui falamos pra nosso app isar elas como referência
+// após declarar nossas rotas, aqui falamos pra nosso app usar elas como referência
 app.use('/', routes);
+
+app.use('/', clienteRoutes); //chama a execução da rota
 
 //Middleware de tratamento de erros
 app.use((err, req, res, next) => {
