@@ -9,6 +9,9 @@ const db = require('./DB/db');
 
 const routes = require('./ROUTES/routes'); // importa as rotas
 const clienteRoutes = require('./ROUTES/clienteroutes') // importa as rotas do cliente controller
+const produtoroutes = require('./ROUTES/produtoroutes')
+const entregadorroutes = require('./ROUTES/routes')
+const pedidoroutes = require('./ROUTES/routes')
 
 const { METHODS } = require('http');
 
@@ -39,6 +42,9 @@ app.get('/', (req,res) => {
 app.use('/', routes);
 
 app.use('/', clienteRoutes); //chama a execução da rota
+app.use('/', produtoroutes);
+app.use('/', entregadorroutes);
+app.use('/', pedidoroutes);
 
 //Middleware de tratamento de erros
 app.use((err, req, res, next) => {

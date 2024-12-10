@@ -77,8 +77,7 @@ exports.atualizarCliente = async (req, res) => {
         if (result.length === 0) {
             return res.status(404).json({ error: 'Cliente não encontrado'});
         }
-    // Criptografando a senha 
-    const hash = await bcrypt.hash(senha, 10);    
+    const hash = await bcrypt.hash(senha, 10);  // Criptografando a senha    
     const clienteAtualizado = { nome, endereço, bairro, cidade, cep, telefone, email, senha: hash };
     await db.query('UPDATE cliente SET ? WHERE cpf = ? ', [clienteAtualizado, cpf]);
     res.json({message: 'Cliente atualizado com sucesso'});
