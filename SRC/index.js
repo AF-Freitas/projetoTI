@@ -8,10 +8,10 @@ const path = require('path');
 const db = require('./DB/db');
 
 const routes = require('./ROUTES/routes'); // importa as rotas
-const clienteRoutes = require('./ROUTES/clienteroutes') // importa as rotas do cliente controller
-const produtoroutes = require('./ROUTES/produtoroutes')
-const entregadorroutes = require('./ROUTES/routes')
-const pedidoroutes = require('./ROUTES/routes')
+const clienteRoutes = require('./ROUTES/clienteroutes'); // importa as rotas do cliente controller
+const produtoroutes = require('./ROUTES/produtoroutes');
+const entregadorroutes = require('./ROUTES/entregadorroutes');
+const pedidoroutes = require('./ROUTES/pedidoroutes');
 
 const { METHODS } = require('http');
 
