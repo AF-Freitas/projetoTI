@@ -42,17 +42,17 @@ exports.listarClienteCPF = async (req, res) => {
 
 //adicionar um novo cliente
 exports.adicionarCliente = async (req, res) => {
-    const { cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha } = req.body;
+    const { cpf, nome, endereco, bairro, cidade, cep, telefone, email, senha } = req.body;
 
     //validação de dados
-    const { error } = clienteSchema.validate({ cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha });
+    const { error } = clienteSchema.validate({ cpf, nome, endereco, bairro, cidade, cep, telefone, email, senha });
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
     try {
         //Criptografando a senha
         const hash = await bcrypt.hash(senha, 10)
-        const novoCliente = { cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha: hash };
+        const novoCliente = { cpf, nome, endereco, bairro, cidade, cep, telefone, email, senha: hash };
         await db.query('INSERT INTO cliente SET ?', novoCliente);
 
         res.json({ message: 'Cliente adicionado com sucesso' });
@@ -65,9 +65,9 @@ exports.adicionarCliente = async (req, res) => {
 // Atualizar cliente
 exports.atualizarCliente = async (req, res) => {
     const { cpf } = req.params;
-    const { nome, endereço, bairro, cidade, cep, telefone, email, senha } = req.body;
+    const { nome, endereco, bairro, cidade, cep, telefone, email, senha } = req.body;
     //validação de dados
-    const { error } = clienteSchema.validate({ cpf, nome, endereço, bairro, cidade, cep, telefone, email, senha });
+    const { error } = clienteSchema.validate({ cpf, nome, endereco, bairro, cidade, cep, telefone, email, senha });
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
@@ -78,7 +78,7 @@ exports.atualizarCliente = async (req, res) => {
             return res.status(404).json({ error: 'Cliente não encontrado'});
         }
     const hash = await bcrypt.hash(senha, 10);  // Criptografando a senha    
-    const clienteAtualizado = { nome, endereço, bairro, cidade, cep, telefone, email, senha: hash };
+    const clienteAtualizado = { nome, endereco, bairro, cidade, cep, telefone, email, senha: hash };
     await db.query('UPDATE cliente SET ? WHERE cpf = ? ', [clienteAtualizado, cpf]);
     res.json({message: 'Cliente atualizado com sucesso'});
     } catch (err) {

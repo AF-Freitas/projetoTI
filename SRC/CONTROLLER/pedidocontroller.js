@@ -39,14 +39,14 @@ exports.listarPedidosID = async (req, res) => {
 
 
 exports.adicionarPedido = async (req, res) => {
-    const { idPedido, dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador } = req.body;
+    const { dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador } = req.body;
 
-    const { error } = entregadorSchema.validate({ idPedido, dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador });
+    const { error } = pedidoSchema.validate({ dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador });
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }
     try {
-        const novoPedido = { dataPedido, qtdeItens, formaPagto, valorTotal, observacao };
+        const novoPedido = { dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador };
         await db.query('INSERT INTO pedido SET ?', novoPedido);
 
         res.json({ message: 'Pedido adicionado com sucesso' });
