@@ -12,6 +12,7 @@ const clienteRoutes = require('./ROUTES/clienteroutes'); // importa as rotas do 
 const produtoroutes = require('./ROUTES/produtoroutes');
 const entregadorroutes = require('./ROUTES/entregadorroutes');
 const pedidoroutes = require('./ROUTES/pedidoroutes');
+const itempedidoroutes = require('./ROUTES/itempedidoroutes')
 
 const { METHODS } = require('http');
 
@@ -45,6 +46,7 @@ app.use('/', clienteRoutes); //chama a execução da rota
 app.use('/', produtoroutes);
 app.use('/', entregadorroutes);
 app.use('/', pedidoroutes);
+app.use('/', itempedidoroutes);
 
 //Middleware de tratamento de erros
 app.use((err, req, res, next) => {
