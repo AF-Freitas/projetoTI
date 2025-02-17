@@ -2,7 +2,6 @@ const db = require('../DB/db');
 const joi = require('joi');
 
 const itempedidoSchema = joi.object({
-    idItem: joi.string().required(),
     qtde: joi.string().required(),
     valorParcial: joi.string().required(),
     idProduto: joi.string().required(),
@@ -34,14 +33,14 @@ exports.listarItempedidoId= async (req, res) => {
 };
 
 exports.adicionarItempedido = async (req, res) => {
-    const { idItem, qtde, valorParcial, idProduto, idPedido } = req.body;
-    const { error } = itempedidoSchema.validate({ idItem, qtde, valorParcial, idProduto, idPedido });
+    const { qtde, valorParcial, idProduto, idPedido } = req.body;
+    const { error } = itempedidoSchema.validate({ qtde, valorParcial, idProduto, idPedido });
     if (error) {
         return res.status(400).json({ error: error.details[0].message })
     }
     try {
         const novoItempedido = { qtde, valorParcial, idProduto, idPedido};
-        await db.query('INSERT INTO categoria SET ?', novaItempedido);
+        await db.query('INSERT INTO itempedido SET ?', novoItempedido);
         res.json({ message: 'Item Pedido adicionada com sucesso' });
     } catch (err) {
         console.error('Erro ao adicionar Item Pedido: ', err)
