@@ -60,7 +60,7 @@ exports.atualizarPedido = async (req, res) => {
     const { idPedido } = req.params;
     const { dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador } = req.body;
     
-    const { error } = pedidoSchema.validate({ idPedido, dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador });
+    const { error } = pedidoSchema.validate({ dataPedido, qtdeItens, formaPagto, valorTotal, observacao, cpf, idEntregador });
     if (error) {
         return res.status(400).json({ error: error.details[0].message });
     }

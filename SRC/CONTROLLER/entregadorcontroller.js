@@ -52,7 +52,7 @@ exports.adicionarEntregador = async (req, res) => {
 
 exports.atualizarEntregador = async (req, res) => {
     const { idEntregador } = req.params;
-    const { nomeEntregador, telefoneEntregador } = req.body;
+    const { nomeEntregador, cnh, telefoneEntregador } = req.body;
    
     const { error } = entregadorSchema.validate({ nomeEntregador, cnh, telefoneEntregador });
     if (error) {
@@ -65,8 +65,8 @@ exports.atualizarEntregador = async (req, res) => {
             return res.status(404).json({ error: 'Entregador não encontrado'});
         }
     
-    const entregadorAtualizado = { nomeEntregador, telefoneEntregador};
-    await db.query('UPDATE entregador SET ? WHERE idEntregador = ? ', [entregadorAtualizado, idEntregador]);
+    const entregadorAtualizado = { nomeEntregador, cnh, telefoneEntregador};
+    await db.query('UPDATE entregador SET ? WHERE idEntregador = ? ', [entregadorAtualizado, cnh, idEntregador]);
     res.json({message: 'Entregador atualizado com sucesso'});
     } catch (err) {
     console.error('Erro ao atualizar entregador:', err); 

@@ -15,7 +15,7 @@ router.post('/clientes', clienteController.adicionarCliente);
 router.put('/clientes/:cpf', clienteController.atualizarCliente);
 
 //Rota para deleter um cliente por CPF
-router.delete('/cliente/:cpf', clienteController.deletarCliente);
+router.delete('/clientes/:cpf', clienteController.deletarCliente);
 
 module.exports = router;
 
